@@ -10,6 +10,16 @@ private String apellido;
 private String direccion;
 private Set<Materia> materias=new HashSet<Materia>();
 
+public Alumno() {
+	
+}
+
+@Override
+public String toString() {
+	return "Alumno [rut=" + rut + ", nombre=" + nombre + ", apellido=" + apellido + ", direccion=" + direccion
+			+ ", materias=" + materias + "]";
+}
+
 public Alumno(String rut, String nombre, String apellido, String direccion, Set<Materia> materias) {
 	super();
 	this.rut = rut;

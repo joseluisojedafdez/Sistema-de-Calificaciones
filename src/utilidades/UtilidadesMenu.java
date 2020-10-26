@@ -1,41 +1,29 @@
 package utilidades;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class UtilidadesMenu {
-
-	public int contruirMenu(List<String> pOpcionesMenu, Scanner leer) {
-
-		List<String> opcionesMenu = pOpcionesMenu;
-		int largo = opcionesMenu.size();
-
-		for (int i = 0; i < largo; i++) {
-			System.out.println(i + 1 + " " + opcionesMenu.get(i));
-		}
-		return seleccionValida(largo, leer);
+	
+		
+	public List <String> crearOpciones (){
+		
+		ArrayList<String> opcionesMenu=new ArrayList<String>();
+		opcionesMenu.add("Crear Alumnos");
+		opcionesMenu.add("Listar Alumnos");
+		opcionesMenu.add("Agregar Materias");
+		opcionesMenu.add("Agregar Notas");
+		opcionesMenu.add("Cargar Datos");
+		opcionesMenu.add("Exportar Datos");
+		opcionesMenu.add("Salir");
+		
+		return opcionesMenu;
+		
 	}
-
-	private int seleccionValida(int largo, Scanner leer) {
-		int opcion = 0;
-		boolean valida = false;
-		while (!valida) {
-			System.out.print("Ingresar opción: ");
-			try {
-				opcion = leer.nextInt();
-			} catch (Exception error) {
-				leer.nextLine();
-			}
-
-			if (opcion < 1 || opcion >= largo + 1) {
-				System.out.println("Opción inválida, intente de nuevo");
-			} else {
-				valida = true;
-			}
-		}
-		return opcion;
-	}
+	
+	
+	
+	
 
 	
 				
