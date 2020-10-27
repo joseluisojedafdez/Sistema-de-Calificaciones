@@ -13,6 +13,10 @@ private Set<Materia> materias=new HashSet<Materia>();
 public Alumno() {
 	
 }
+public Alumno(String pRut,String pNombre) {
+	this.nombre=pNombre;
+	this.rut=pRut;
+}
 
 @Override
 public String toString() {
@@ -69,6 +73,10 @@ public void setMaterias(Set<Materia> materias) {
 	this.materias = materias;
 } 
 
-
+@Override
+	public boolean equals(Object obj) {
+		Alumno a=(Alumno)obj;
+		return a.getRut().equals(rut);
+	}
 
 }

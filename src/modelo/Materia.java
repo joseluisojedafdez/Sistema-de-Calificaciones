@@ -1,5 +1,6 @@
 package modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Materia {
@@ -7,8 +8,13 @@ public class Materia {
 	
 	private MateriaEnum nombre;
 	private List<Double> notas;
+	
 	public Materia() {
 		
+	}
+	public Materia(MateriaEnum materiaAlumno) {
+		this.nombre=materiaAlumno;
+		this.notas=new ArrayList<Double>();
 	}
 	
 	public Materia(MateriaEnum nombre, List<Double> notas) {

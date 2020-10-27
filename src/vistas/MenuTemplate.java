@@ -3,6 +3,9 @@ package vistas;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import modelo.Alumno;
 import utilidades.UtilidadesMenu;
 
 public abstract class MenuTemplate {
@@ -17,7 +20,7 @@ public abstract class MenuTemplate {
 		this.scanner = scanner;
 	}
 
-	public Map cargarDatos() {
+	public Set<Alumno> cargarDatos() {
 		// ejecuta la carga de datos del archivo
 		return null;
 	}
@@ -67,7 +70,9 @@ public abstract class MenuTemplate {
 				menuPrincipal.agregarNotaPasoUno();
 		}
 		else if (opcionUsuario==5) {
-			Menu.listaMateriasxAlumno=menuPrincipal.cargarDatos();			
+			
+			Set<Alumno>listaAlumnos=menuPrincipal.cargarDatos();
+			System.out.println("Linea 75 MenuTemplate"+listaAlumnos);
 		}
 		else if(opcionUsuario==6) {
 			menuPrincipal.exportarDatos();

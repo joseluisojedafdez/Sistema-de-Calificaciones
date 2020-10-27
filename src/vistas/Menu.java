@@ -2,11 +2,16 @@ package vistas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import modelo.Alumno;
 import modelo.Materia;
+import modelo.MateriaEnum;
 import servicios.AlumnoServicio;
 import servicios.ArchivoServicio;
 
@@ -14,17 +19,15 @@ public class Menu extends MenuTemplate {
 	private Scanner currScanner = new Scanner(System.in);
 	AlumnoServicio currServicioAlumno = new AlumnoServicio();
 	ArchivoServicio currServicioArchivo = new ArchivoServicio();
-	List<Alumno> listaAlumnos = new ArrayList<Alumno>();
-	static Map <Alumno,Materia> listaMateriasxAlumno=new HashMap <Alumno,Materia>();
-
-	
+	Set<Alumno> listaAlumnos=new HashSet<Alumno>();
+	Map<Alumno, Set<Materia>> listaMateriasxAlumno = new HashMap<Alumno, Set<Materia>>();
 
 	@Override
-	public Map<Alumno,Materia> cargarDatos() {
-		listaMateriasxAlumno.putAll(ArchivoServicio.cargarAlumnos());
-		System.out.println(listaMateriasxAlumno);
-		System.out.println(listaAlumnos);
-		return listaMateriasxAlumno;
+	public Set<Alumno> cargarDatos() {
+		
+		listaAlumnos=new ArchivoServicio().crearListaAlumnos("notas.csv");
+		System.out.println("Linea 29 Menu"+listaAlumnos);
+		return listaAlumnos;
 	}
 
 	@Override
@@ -47,15 +50,40 @@ public class Menu extends MenuTemplate {
 		String direccion = leer.nextLine();
 		Alumno nuevoAlumno = new Alumno(rut, nombre, apellido, direccion, null);
 		listaAlumnos.add(nuevoAlumno);
+		listaMateriasxAlumno.put(nuevoAlumno, null);
 		System.out.println("---------------------------------");
-
+		
 	}
 
 	@Override
 	public void agregarMateria() {
-		System.out.println("Agregando Materia");
-		System.out.println(listaMateriasxAlumno.isEmpty());
-	}
+		System.out.println("Introduzca Rut Alumno: ");
+	
+		String rut = scanner.nextLine();
+		
+		for (Alumno alumno:listaAlumnos) {
+				
+			if (alumno.getRut().equals(rut)) {
+				System.out.println("Materias por Alumno: ");
+				System.out.println(alumno.getMaterias());
+				System.out.println("¿Qué Materia quiere añadir?: ");
+				System.out.println(MateriaEnum.MATEMATICAS);
+				System.out.println(MateriaEnum.LENGUAJE);
+				System.out.println(MateriaEnum.CIENCIA);
+				System.out.println(MateriaEnum.HISTORIA);
+				String añadirMateria = scanner.nextLine();
+				MateriaEnum mat = MateriaEnum.valueOf(añadirMateria);
+				Materia materiaNueva = new Materia(mat);
+				Set<Materia> materias = alumno.getMaterias();
+				materias.add(materiaNueva);
+				alumno.setMaterias(materias);
+			}
+			else {
+				
+			}
+
+		}
+}
 
 	@Override
 	public void agregarNotaPasoUno() {
@@ -67,17 +95,16 @@ public class Menu extends MenuTemplate {
 	public void listarAlumnos() {
 		System.out.println("---------------------------------");
 
-		System.out.println(listaMateriasxAlumno.isEmpty());
-		for (Map.Entry<Alumno, Materia> entry : listaMateriasxAlumno.entrySet()) {
+		for (Alumno alumno: listaAlumnos) {
 			System.out.println("Datos Alumno");
-			System.out.println("	RUT: " + entry.getKey().getRut());
-			System.out.println("	Nombre: " + entry.getKey().getNombre());
-			System.out.println("	Apellido: " + entry.getKey().getApellido());
-			System.out.println("	Dirección: " + entry.getKey().getDireccion());
+			System.out.println("	RUT: " + alumno.getRut());
+			System.out.println("	Nombre: " + alumno.getNombre());
+			System.out.println("	Apellido: " + alumno.getApellido());
+			System.out.println("	Dirección: " + alumno.getDireccion());
 			System.out.println("Materias");
-			System.out.println("	" + entry.getValue().getNombre());
+			System.out.println("	" + alumno.getMaterias());
 			System.out.println("		Notas");
-			System.out.println("		" + entry.getValue().getNotas());
+			System.out.println("		" + alumno.getMaterias());
 		}
 
 		System.out.println("---------------------------------");
