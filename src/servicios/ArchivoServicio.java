@@ -30,8 +30,6 @@ public class ArchivoServicio {
 
 	}
 
-	
-
 	public Set<Alumno> listarAlumnos(String nombreArchivo) {
 
 		Set<Alumno> listado = new HashSet<Alumno>();
@@ -41,19 +39,18 @@ public class ArchivoServicio {
 
 			br = new BufferedReader(new FileReader(nombreArchivo));
 			String line = br.readLine();
-			String rutAnterior="";
+			String rutAnterior = "";
 			while (line != null) {
 				String[] values = line.split(SEPARATOR);
 				alumno = new Alumno(values[0], values[1]);
-				
-				String rut=values[0];
-				
-				
-				if (!rutAnterior.equals(rut)){
-				listado.add(alumno);
+
+				String rut = values[0];
+
+				if (!rutAnterior.equals(rut)) {
+					listado.add(alumno);
 				}
 				line = br.readLine();
-				rutAnterior=rut;
+				rutAnterior = rut;
 			}
 		}
 
@@ -78,20 +75,19 @@ public class ArchivoServicio {
 
 		Set<Alumno> listaAlumnos = new HashSet<Alumno>();
 		listaAlumnos = listarAlumnos(nombreArchivo);
-		System.out.println(listaAlumnos);
 
 		return listaAlumnos;
 
 	}
-	
-	public static Map<String, HashSet<Materia>> crearMateriaxAlumno(List<Alumno> listaAlumnos,String nombreArchivo) {
 
-		Map<String , HashSet<Materia>> mapa = new HashMap<String,HashSet<Materia>>();
-		List<Double>notas=new ArrayList <Double>();
-		HashSet<Materia>listaMaterias=new HashSet<Materia>();
+	public static Map<String, HashSet<Materia>> crearMateriaxAlumno(List<Alumno> listaAlumnos, String nombreArchivo) {
+
+		Map<String, HashSet<Materia>> mapa = new HashMap<String, HashSet<Materia>>();
+		List<Double> notas = new ArrayList<Double>();
+		HashSet<Materia> listaMaterias = new HashSet<Materia>();
 		Materia materiaAlumno;
-		String rut="";
-		
+		String rut = "";
+
 		BufferedReader br = null;
 		try {
 
@@ -101,24 +97,23 @@ public class ArchivoServicio {
 			while (line != null) {
 				String[] values = line.split(SEPARATOR);
 				rut = values[0];
-				MateriaEnum mat=MateriaEnum.valueOf(values[2]);
-				materiaAlumno = new Materia (mat);
-				for (Alumno alumno:listaAlumnos) {
-					if (rut.equals(alumno.getRut())&&(materiaAlumno.getNombre()==mat)) {
+				MateriaEnum mat = MateriaEnum.valueOf(values[2]);
+				materiaAlumno = new Materia(mat);
+				for (Alumno alumno : listaAlumnos) {
+					if (rut.equals(alumno.getRut()) && (materiaAlumno.getNombre() == mat)) {
 						notas.add(Double.parseDouble(values[3]));
 						materiaAlumno.setNotas(notas);
 						listaMaterias.add(materiaAlumno);
-						mapa.put(rut,listaMaterias);				
-					
-					} else if (rut.equals(alumno.getRut())&&materiaAlumno.getNombre()==mat){
+						mapa.put(rut, listaMaterias);
+
+					} else if (rut.equals(alumno.getRut()) && materiaAlumno.getNombre() == mat) {
 						notas.add(Double.parseDouble(values[3]));
 						materiaAlumno.setNotas(notas);
-						mapa.put(rut,listaMaterias);
+						mapa.put(rut, listaMaterias);
 					}
-					
-			}
-					
-				
+
+				}
+
 				line = br.readLine();
 			}
 		}
@@ -139,5 +134,5 @@ public class ArchivoServicio {
 		return mapa;
 
 	}
-	
+
 }

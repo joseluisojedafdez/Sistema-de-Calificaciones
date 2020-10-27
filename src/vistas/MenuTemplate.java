@@ -9,8 +9,7 @@ import modelo.Alumno;
 import utilidades.UtilidadesMenu;
 
 public abstract class MenuTemplate {
-	protected Scanner scanner=new Scanner(System.in);
-	
+	protected Scanner scanner = new Scanner(System.in);
 
 	public Scanner getScanner() {
 		return scanner;
@@ -46,77 +45,68 @@ public abstract class MenuTemplate {
 	}
 
 	public void terminarPrograma() {
-		
+
 	}
-	
+
 	public boolean iniciarMenu() {
-		boolean continuar=true;
-		UtilidadesMenu opcionMenu=new UtilidadesMenu();
-		List<String> opciones=opcionMenu.crearOpciones();
-		int opcionUsuario=contruirMenu(opciones,scanner);
-		Menu menuPrincipal=new Menu();
-		
-		if(opcionUsuario==1){
+		boolean continuar = true;
+		UtilidadesMenu opcionMenu = new UtilidadesMenu();
+		List<String> opciones = opcionMenu.crearOpciones();
+		int opcionUsuario = contruirMenu(opciones, scanner);
+		Menu menuPrincipal = new Menu();
+
+		if (opcionUsuario == 1) {
 			menuPrincipal.crearAlumno();
-		}
-		else if (opcionUsuario==2){
+		} else if (opcionUsuario == 2) {
 			menuPrincipal.listarAlumnos();
-		}
-		else if (opcionUsuario==3){
+		} else if (opcionUsuario == 3) {
 			menuPrincipal.agregarMateria();
-				
-		}
-		else if (opcionUsuario==4){
-				menuPrincipal.agregarNotaPasoUno();
-		}
-		else if (opcionUsuario==5) {
-			
-			Set<Alumno>listaAlumnos=menuPrincipal.cargarDatos();
-			System.out.println("Linea 75 MenuTemplate"+listaAlumnos);
-		}
-		else if(opcionUsuario==6) {
+
+		} else if (opcionUsuario == 4) {
+			menuPrincipal.agregarNotaPasoUno();
+		} else if (opcionUsuario == 5) {
+
+			menuPrincipal.cargarDatos();
+
+		} else if (opcionUsuario == 6) {
 			menuPrincipal.exportarDatos();
+		} else {
+			continuar = false;
 		}
-		else {
-		continuar=false;
-		}
-		
+
 		return continuar;
-		
-		
+
 	}
-	
+
 	public int contruirMenu(List<String> pOpcionesMenu, Scanner leer) {
 
-			List<String> opcionesMenu = pOpcionesMenu;
-			int largo = opcionesMenu.size();
+		List<String> opcionesMenu = pOpcionesMenu;
+		int largo = opcionesMenu.size();
 
-			for (int i = 0; i < largo; i++) {
-				System.out.println(i + 1 + " " + opcionesMenu.get(i));
-			}
-			return seleccionValida(largo, leer);
+		for (int i = 0; i < largo; i++) {
+			System.out.println(i + 1 + " " + opcionesMenu.get(i));
 		}
-
-	public int seleccionValida(int largo, Scanner leer) {
-			int opcion = 0;
-			boolean valida = false;
-			while (!valida) {
-				System.out.print("Ingresar opción: ");
-				try {
-					opcion = leer.nextInt();
-				} catch (Exception error) {
-					leer.nextLine();
-				}
-
-				if (opcion < 1 || opcion >= largo + 1) {
-					System.out.println("Opción inválida, intente de nuevo");
-				} else {
-					valida = true;
-				}
-			}
-			return opcion;
-		}
-		
+		return seleccionValida(largo, leer);
 	}
 
+	public int seleccionValida(int largo, Scanner leer) {
+		int opcion = 0;
+		boolean valida = false;
+		while (!valida) {
+			System.out.print("Ingresar opción: ");
+			try {
+				opcion = leer.nextInt();
+			} catch (Exception error) {
+				leer.nextLine();
+			}
 
+			if (opcion < 1 || opcion >= largo + 1) {
+				System.out.println("Opción inválida, intente de nuevo");
+			} else {
+				valida = true;
+			}
+		}
+		return opcion;
+	}
+
+}
