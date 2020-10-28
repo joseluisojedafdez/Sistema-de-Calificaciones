@@ -1,11 +1,9 @@
 package program;
 
-import vistas.Menu;
 
-import java.util.List;
-import java.util.ArrayList;
 
 import utilidades.UtilidadesMenu;
+import vistas.Menu;
 
 
 public class Main {
@@ -21,6 +19,8 @@ public class Main {
 		
 		
 		while (continuar==true) {
+			UtilidadesMenu menu=new UtilidadesMenu();
+			menu.limpiarPantalla();
 			continuar=menuPrincipal.iniciarMenu();
 			
 		}

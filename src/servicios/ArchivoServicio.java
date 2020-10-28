@@ -4,13 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import modelo.Alumno;
 import modelo.Materia;
 import modelo.MateriaEnum;
@@ -44,6 +41,7 @@ public class ArchivoServicio {
 				String[] values = line.split(SEPARATOR);
 				alumno = new Alumno(values[0], values[1]);
 
+				alumno.getMaterias();
 				String rut = values[0];
 
 				if (!rutAnterior.equals(rut)) {
@@ -80,43 +78,36 @@ public class ArchivoServicio {
 
 	}
 
-	public static Map<String, HashSet<Materia>> crearMateriaxAlumno(List<Alumno> listaAlumnos, String nombreArchivo) {
-
-		Map<String, HashSet<Materia>> mapa = new HashMap<String, HashSet<Materia>>();
-		List<Double> notas = new ArrayList<Double>();
-		HashSet<Materia> listaMaterias = new HashSet<Materia>();
-		Materia materiaAlumno;
-		String rut = "";
+	public void addMaterias(Set<Alumno> listaAlumnos, String nombreArchivo) {
 
 		BufferedReader br = null;
+		Set<Materia> listaMaterias = new HashSet<Materia>();
+		List<Double> notas = new ArrayList<Double>();
+		System.out.println(listaAlumnos);
 		try {
 
 			br = new BufferedReader(new FileReader(nombreArchivo));
 			String line = br.readLine();
 
-			while (line != null) {
+			while (line.contains(",")) {
 				String[] values = line.split(SEPARATOR);
-				rut = values[0];
-				MateriaEnum mat = MateriaEnum.valueOf(values[2]);
-				materiaAlumno = new Materia(mat);
+				
 				for (Alumno alumno : listaAlumnos) {
-					if (rut.equals(alumno.getRut()) && (materiaAlumno.getNombre() == mat)) {
-						notas.add(Double.parseDouble(values[3]));
-						materiaAlumno.setNotas(notas);
-						listaMaterias.add(materiaAlumno);
-						mapa.put(rut, listaMaterias);
+					if (alumno.getRut().equals(values[0])) {
+						listaMaterias = alumno.getMaterias();
+						MateriaEnum mat = MateriaEnum.valueOf(values[2]);
+						Materia materiaNueva = new Materia(mat);
+						Double valorNota = Double.parseDouble(values[3]);
+						notas = materiaNueva.getNotas();
+						notas.add(valorNota);
+						listaMaterias.add(materiaNueva);
+						alumno.setMaterias(listaMaterias);
 
-					} else if (rut.equals(alumno.getRut()) && materiaAlumno.getNombre() == mat) {
-						notas.add(Double.parseDouble(values[3]));
-						materiaAlumno.setNotas(notas);
-						mapa.put(rut, listaMaterias);
 					}
-
 				}
+			}System.out.println("Archivo importado: "+nombreArchivo);
 
-				line = br.readLine();
-			}
-		}
+		} 
 
 		catch (Exception e) {
 
@@ -131,8 +122,6 @@ public class ArchivoServicio {
 		} catch (IOException error) {
 			error.printStackTrace();
 		}
-		return mapa;
-
 	}
 
 }

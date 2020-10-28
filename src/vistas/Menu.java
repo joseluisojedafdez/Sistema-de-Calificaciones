@@ -1,5 +1,8 @@
 package vistas;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,13 +11,12 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.List;
 
-
-
 import modelo.Alumno;
 import modelo.Materia;
 import modelo.MateriaEnum;
 import servicios.AlumnoServicio;
 import servicios.ArchivoServicio;
+import servicios.PromedioServicioImp;
 
 public class Menu extends MenuTemplate {
 	private Scanner currScanner = new Scanner(System.in);
@@ -25,15 +27,45 @@ public class Menu extends MenuTemplate {
 
 	@Override
 	public Set<Alumno> cargarDatos() {
+		ArchivoServicio cargaDatos = new ArchivoServicio();
+		listaAlumnos = cargaDatos.crearListaAlumnos("notas.csv");
 
-		listaAlumnos = new ArchivoServicio().crearListaAlumnos("notas.csv");
 		return listaAlumnos;
 	}
 
 	@Override
 	public void exportarDatos() {
-		System.out.println("Exportando Datos");
+		System.out.println("Exportando Datos a promedios.txt");
+		FileWriter archivo = null;
+		BufferedWriter escribir = null;
+		
+		try {
+			archivo = new FileWriter("promedios.txt");
+			escribir = new BufferedWriter(archivo);
+			for (Alumno alumno : listaAlumnos) {
+				Map<String, Double> promedioMaterias = calculaPromedios(alumno);
+				escribir.write("Alumno: " + alumno.getRut().toString() + " - " + alumno.getNombre().toString()+"\n");
+				for (Map.Entry<String, Double> entry : promedioMaterias.entrySet()) {
+					escribir.write("Materia: " + entry.getKey().toString() + " - Promedio: " + entry.getValue().toString()+"\n");
 
+				}
+			}
+			System.out.println("Datos exportados a promedios.txt");
+
+		}
+		// En caso de un erros al crear nuevo archivo
+		catch (Exception error) {
+			System.out.println("El archivo promedios.txt no se pudo crear " + error);
+
+		}
+
+		try {
+			escribir.close();
+			archivo.close();
+		} catch (Exception error) {
+			System.out.println("El archivo promedios.txt no se pudo cerrar " + error);
+
+		}
 	}
 
 	@Override
@@ -59,7 +91,7 @@ public class Menu extends MenuTemplate {
 		System.out.println("Introduzca Rut Alumno: ");
 
 		String rut = scanner.nextLine();
-		System.out.println(listaAlumnos.size());
+
 		for (Alumno alumno : listaAlumnos) {
 
 			if (alumno.getRut().equals(rut)) {
@@ -77,6 +109,7 @@ public class Menu extends MenuTemplate {
 				materias.add(materiaNueva);
 				alumno.setMaterias(materias);
 			} else {
+				System.out.println("Alumno con RUT: " + rut + " no existe");
 
 			}
 
@@ -85,11 +118,11 @@ public class Menu extends MenuTemplate {
 
 	@Override
 	public void agregarNotaPasoUno() {
-		
+
 		System.out.println("Introduzca Rut Alumno: ");
 
 		String rut = scanner.nextLine();
-		System.out.println(listaAlumnos.size());
+
 		for (Alumno alumno : listaAlumnos) {
 
 			if (alumno.getRut().equals(rut)) {
@@ -98,18 +131,18 @@ public class Menu extends MenuTemplate {
 				System.out.println("¿Qué Materia quiere calificar: ");
 				String añadirMateria = scanner.nextLine();
 				MateriaEnum mat = MateriaEnum.valueOf(añadirMateria);
-				for(Materia materia:alumno.getMaterias()) {
-					if (materia.getNombre()==mat) {
+				for (Materia materia : alumno.getMaterias()) {
+					if (materia.getNombre() == mat) {
 						System.out.println("Indique Calificación: ");
-						Double nota=Double.parseDouble(scanner.nextLine());
-						List<Double>notas= materia.getNotas();
+						Double nota = Double.parseDouble(scanner.nextLine());
+						List<Double> notas = materia.getNotas();
 						notas.add(nota);
 						materia.setNotas(notas);
 					}
-						
-					}
+
 				}
 			}
+		}
 	}
 
 	@Override
@@ -146,5 +179,18 @@ public class Menu extends MenuTemplate {
 
 	public void setCurrScanner(Scanner currScanner) {
 		this.currScanner = currScanner;
+	}
+
+	public Map<String, Double> calculaPromedios(Alumno pAlumno) {
+
+		Map<String, Double> materiasPromedio = new HashMap<String, Double>();
+		PromedioServicioImp avgCalc = new PromedioServicioImp();
+		Set<Materia> materiasAlumno = pAlumno.getMaterias();
+		for (Materia materia : materiasAlumno) {
+			Double promedio = avgCalc.calcularPromedio(materia.getNotas());
+			materiasPromedio.put(materia.getNombre().toString(), promedio);
+		}
+
+		return materiasPromedio;
 	}
 }
