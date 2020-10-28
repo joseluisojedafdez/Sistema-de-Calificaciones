@@ -23,13 +23,18 @@ public class Menu extends MenuTemplate {
 	AlumnoServicio currServicioAlumno = new AlumnoServicio();
 	ArchivoServicio currServicioArchivo = new ArchivoServicio();
 	static Set<Alumno> listaAlumnos = new HashSet<Alumno>();
-	Map<Alumno, Set<Materia>> listaMateriasxAlumno = new HashMap<Alumno, Set<Materia>>();
+	List<String[]> listaValores = new ArrayList<String[]>();
+	
 
 	@Override
 	public Set<Alumno> cargarDatos() {
 		ArchivoServicio cargaDatos = new ArchivoServicio();
 		listaAlumnos = cargaDatos.crearListaAlumnos("notas.csv");
-
+		System.out.println("Lista de alumnos cargada");
+		//listaValores=cargaDatos.addValuesfromFile();
+		//ystem.out.println("Lista de valores cargada");
+		//addMaterias();
+		//System.out.println("Archivo notas.csv importado.");
 		return listaAlumnos;
 	}
 
@@ -192,5 +197,28 @@ public class Menu extends MenuTemplate {
 		}
 
 		return materiasPromedio;
+	}
+	
+	public void addMaterias() {
+		
+		for (Alumno alumno : listaAlumnos) {
+			String rutAlumno=alumno.getRut();
+			System.out.println("Añadiendo materias al alumno "+rutAlumno);		
+			for(String[] valorArchivo:listaValores) {
+
+			if (rutAlumno.equals(valorArchivo[0])) {
+				
+				MateriaEnum mat = MateriaEnum.valueOf(valorArchivo[2]);
+				Materia materiaNueva = new Materia(mat);
+				Set<Materia> materias = alumno.getMaterias();
+				materias.add(materiaNueva);
+				System.out.println("Añadiendo "+materiaNueva+" al alumno "+rutAlumno);
+				alumno.setMaterias(materias);
+			} 
+				
+
+			}
+
+		}
 	}
 }

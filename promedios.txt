@@ -1,2 +1,5 @@
 Alumno: 17.423.112-4 - Samuel
+Materia: MATEMATICAS - Promedio: 4.066666666666666
 Alumno: 18.546.232-1 - Pepe
+Materia: MATEMATICAS - Promedio: 4.425000000000001
+Materia: LENGUAJE - Promedio: 3.35

@@ -17,7 +17,7 @@ public class PromedioServicioImp {
 			suma=suma+plista.get(i);
 		}
 				
-		resultado=suma/plista.size();
+		resultado=(double) Math.round(suma/plista.size()*10d/10d);
 		}
 		
 		return resultado;

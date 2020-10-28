@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import modelo.Alumno;
-import modelo.Materia;
-import modelo.MateriaEnum;
+
 
 public class ArchivoServicio {
 
 	final static String SEPARATOR = ",";
 	static List<String> listaDatos = new ArrayList<String>();
+	
 
 	public List<PromedioServicioImp> exportarDatos(String pArchivo) {
 		List<PromedioServicioImp> listaPromedios = new ArrayList<PromedioServicioImp>();
@@ -32,9 +32,10 @@ public class ArchivoServicio {
 		Set<Alumno> listado = new HashSet<Alumno>();
 		Alumno alumno = new Alumno();
 		BufferedReader br = null;
+		
 		try {
-
-			br = new BufferedReader(new FileReader(nombreArchivo));
+			FileReader fr=new FileReader(nombreArchivo);
+			br = new BufferedReader(fr);
 			String line = br.readLine();
 			String rutAnterior = "";
 			while (line != null) {
@@ -50,6 +51,8 @@ public class ArchivoServicio {
 				line = br.readLine();
 				rutAnterior = rut;
 			}
+			br.close();
+			fr.close();
 		}
 
 		catch (Exception e) {
@@ -60,11 +63,9 @@ public class ArchivoServicio {
 			}
 
 		}
-		try {
-			br.close();
-		} catch (IOException error) {
-			error.printStackTrace();
-		}
+		
+		
+		
 		return listado;
 
 	}
@@ -78,36 +79,27 @@ public class ArchivoServicio {
 
 	}
 
-	public void addMaterias(Set<Alumno> listaAlumnos, String nombreArchivo) {
-
+	public List<String[]> addValuesfromFile() {
+		System.out.println("Comenzando a añadir los valores");
 		BufferedReader br = null;
-		Set<Materia> listaMaterias = new HashSet<Materia>();
-		List<Double> notas = new ArrayList<Double>();
-		System.out.println(listaAlumnos);
+		String nombreArchivo="notas.csv";
+		List<String[]> listaValores = new ArrayList<String[]>();
+		
 		try {
-
-			br = new BufferedReader(new FileReader(nombreArchivo));
+			FileReader fr= new FileReader(nombreArchivo);
+			System.out.println("Abriendo el archivo");
+			br = new BufferedReader(fr);
 			String line = br.readLine();
 
-			while (line.contains(",")) {
+			while (line!=null) {
 				String[] values = line.split(SEPARATOR);
-				
-				for (Alumno alumno : listaAlumnos) {
-					if (alumno.getRut().equals(values[0])) {
-						listaMaterias = alumno.getMaterias();
-						MateriaEnum mat = MateriaEnum.valueOf(values[2]);
-						Materia materiaNueva = new Materia(mat);
-						Double valorNota = Double.parseDouble(values[3]);
-						notas = materiaNueva.getNotas();
-						notas.add(valorNota);
-						listaMaterias.add(materiaNueva);
-						alumno.setMaterias(listaMaterias);
+				System.out.println("Añadiendo línea");
+				listaValores.add(values);
 
-					}
-				}
-			}System.out.println("Archivo importado: "+nombreArchivo);
-
-		} 
+			}
+				br.close();
+				fr.close();
+		}
 
 		catch (Exception e) {
 
@@ -117,11 +109,9 @@ public class ArchivoServicio {
 			}
 
 		}
-		try {
-			br.close();
-		} catch (IOException error) {
-			error.printStackTrace();
-		}
+		
+	
+		return listaValores;
 	}
 
 }
