@@ -19,8 +19,8 @@ public class Main {
 		
 		
 		while (continuar==true) {
-			UtilidadesMenu menu=new UtilidadesMenu();
-			menu.limpiarPantalla();
+			//UtilidadesMenu menu=new UtilidadesMenu();
+			//menu.limpiarPantalla();
 			continuar=menuPrincipal.iniciarMenu();
 			
 		}

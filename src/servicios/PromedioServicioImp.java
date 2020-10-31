@@ -13,11 +13,12 @@ public class PromedioServicioImp {
 			resultado=null;
 		} else {
 		
+		
 		for (int i=0;i<plista.size();i++) {
 			suma=suma+plista.get(i);
 		}
 				
-		resultado=(double) Math.round(suma/plista.size()*10d/10d);
+		resultado=(double) suma/plista.size();
 		}
 		
 		return resultado;

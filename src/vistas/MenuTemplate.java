@@ -2,7 +2,6 @@ package vistas;
 
 
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -66,7 +65,7 @@ public abstract class MenuTemplate {
 		} else if (opcionUsuario == 4) {
 			menuPrincipal.agregarNotaPasoUno();
 		} else if (opcionUsuario == 5) {
-
+			menuPrincipal.cargarValoresArchivo();
 			menuPrincipal.cargarDatos();
 
 		} else if (opcionUsuario == 6) {

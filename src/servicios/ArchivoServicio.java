@@ -23,10 +23,6 @@ public class ArchivoServicio {
 		return listaPromedios;
 	}
 
-	public void exportarDatos(Map<Alumno, String> pAlumnos, String pRutaArchivo) {
-
-	}
-
 	public Set<Alumno> listarAlumnos(String nombreArchivo) {
 
 		Set<Alumno> listado = new HashSet<Alumno>();
@@ -95,8 +91,9 @@ public class ArchivoServicio {
 				String[] values = line.split(SEPARATOR);
 				System.out.println("Añadiendo línea");
 				listaValores.add(values);
-
+				line = br.readLine();
 			}
+			
 				br.close();
 				fr.close();
 		}

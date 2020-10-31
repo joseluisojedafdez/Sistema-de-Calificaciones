@@ -2,7 +2,7 @@ package vistas;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,17 +24,19 @@ public class Menu extends MenuTemplate {
 	ArchivoServicio currServicioArchivo = new ArchivoServicio();
 	static Set<Alumno> listaAlumnos = new HashSet<Alumno>();
 	List<String[]> listaValores = new ArrayList<String[]>();
-	
 
 	@Override
 	public Set<Alumno> cargarDatos() {
 		ArchivoServicio cargaDatos = new ArchivoServicio();
 		listaAlumnos = cargaDatos.crearListaAlumnos("notas.csv");
 		System.out.println("Lista de alumnos cargada");
-		//listaValores=cargaDatos.addValuesfromFile();
-		//ystem.out.println("Lista de valores cargada");
-		//addMaterias();
-		//System.out.println("Archivo notas.csv importado.");
+		listaValores = cargaDatos.addValuesfromFile();
+		System.out.println("Lista de valores cargada");
+		addMaterias();
+		System.out.println("Materias Añadidas");
+		agregarNotaCarga(listaAlumnos);
+		System.out.println("Notas Añadidas");
+		System.out.println("Archivo notas.csv importado.");
 		return listaAlumnos;
 	}
 
@@ -43,22 +45,24 @@ public class Menu extends MenuTemplate {
 		System.out.println("Exportando Datos a promedios.txt");
 		FileWriter archivo = null;
 		BufferedWriter escribir = null;
-		
+
 		try {
 			archivo = new FileWriter("promedios.txt");
 			escribir = new BufferedWriter(archivo);
 			for (Alumno alumno : listaAlumnos) {
 				Map<String, Double> promedioMaterias = calculaPromedios(alumno);
-				escribir.write("Alumno: " + alumno.getRut().toString() + " - " + alumno.getNombre().toString()+"\n");
+				escribir.write("Alumno: " + alumno.getRut().toString() + " - " + alumno.getNombre().toString() + "\n");
 				for (Map.Entry<String, Double> entry : promedioMaterias.entrySet()) {
-					escribir.write("Materia: " + entry.getKey().toString() + " - Promedio: " + entry.getValue().toString()+"\n");
+					DecimalFormat df = new DecimalFormat("#.#");
+					escribir.write("Materia: " + entry.getKey().toString() + " - Promedio: "
+							+ df.format(entry.getValue()).toString() + "\n");
 
 				}
 			}
 			System.out.println("Datos exportados a promedios.txt");
 
 		}
-		// En caso de un erros al crear nuevo archivo
+		// En caso de un error al crear nuevo archivo
 		catch (Exception error) {
 			System.out.println("El archivo promedios.txt no se pudo crear " + error);
 
@@ -198,27 +202,64 @@ public class Menu extends MenuTemplate {
 
 		return materiasPromedio;
 	}
-	
+
 	public void addMaterias() {
-		
+
+		Set<String> nombreMateria = new HashSet<String>();
+
 		for (Alumno alumno : listaAlumnos) {
-			String rutAlumno=alumno.getRut();
-			System.out.println("Añadiendo materias al alumno "+rutAlumno);		
-			for(String[] valorArchivo:listaValores) {
+			String rutAlumno = alumno.getRut();
+			for (String[] valorArchivo : listaValores) {
 
-			if (rutAlumno.equals(valorArchivo[0])) {
-				
-				MateriaEnum mat = MateriaEnum.valueOf(valorArchivo[2]);
-				Materia materiaNueva = new Materia(mat);
-				Set<Materia> materias = alumno.getMaterias();
-				materias.add(materiaNueva);
-				System.out.println("Añadiendo "+materiaNueva+" al alumno "+rutAlumno);
-				alumno.setMaterias(materias);
-			} 
-				
+				if (rutAlumno.equals(valorArchivo[0])) {
 
+					String materia = valorArchivo[2];
+
+					if (!nombreMateria.contains(materia)) {
+
+						MateriaEnum mat = MateriaEnum.valueOf(valorArchivo[2]);
+						Materia materiaNueva = new Materia(mat);
+						Set<Materia> materias = alumno.getMaterias();
+						materias.add(materiaNueva);
+						alumno.setMaterias(materias);
+						nombreMateria.add(materia);
+					}
+
+				}
 			}
 
+			nombreMateria.clear();
+
+		}
+	}
+
+	public void cargarValoresArchivo() {
+		ArchivoServicio cargaDatos = new ArchivoServicio();
+		listaValores = cargaDatos.addValuesfromFile();
+		System.out.println("Lista de valores cargada");
+		System.out.println("Archivo notas.csv importado.");
+
+	}
+
+	public void agregarNotaCarga(Set<Alumno> listaAlumnos) {
+
+		for (Alumno alumno : listaAlumnos) {
+
+			for (String[] valorArchivo : listaValores) {
+
+				if (alumno.getRut().equals(valorArchivo[0])) {
+
+					for (Materia materia : alumno.getMaterias()) {
+						if (materia.getNombre() == MateriaEnum.valueOf(valorArchivo[2])) {
+							Double nota = Double.parseDouble(valorArchivo[3]);
+							List<Double> notas = materia.getNotas();
+							notas.add(nota);
+							materia.setNotas(notas);
+						}
+
+					}
+				}
+			}
 		}
 	}
 }
